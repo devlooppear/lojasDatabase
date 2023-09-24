@@ -1,0 +1,61 @@
+CREATE DATABASE Lojas;
+
+USE Lojas;
+
+CREATE TABLE Estado (
+  ID INT NOT NULL AUTO_INCREMENT,
+  Nome VARCHAR(50) NOT NULL,
+  UF CHAR(2) NOT NULL,
+  PRIMARY KEY (ID)
+);
+
+CREATE TABLE Municipio (
+  ID INT NOT NULL AUTO_INCREMENT,
+  Nome VARCHAR(50) NOT NULL,
+  UF CHAR(2) NOT NULL,
+  DDD INT,
+  PRIMARY KEY (ID)
+);
+
+CREATE TABLE Cliente (
+  ID INT NOT NULL AUTO_INCREMENT,
+  Nome VARCHAR(80) NOT NULL,
+  CPF CHAR(11) NOT NULL,
+  Celular CHAR(11) NOT NULL,
+  Municipio_ID INT NOT NULL,
+  Estado_ID INT NOT NULL,
+  DataNascimento DATE,
+  EndLogradouro VARCHAR(80),
+  EndNumero VARCHAR(10),
+  EndBairro VARCHAR(50),
+  EndCidade VARCHAR(50),
+  EndCEP CHAR(8),
+  Telefone CHAR(11),
+  Email VARCHAR(50),
+  PRIMARY KEY (ID),
+  FOREIGN KEY (Municipio_ID) REFERENCES Municipio(ID) ON DELETE CASCADE,
+  FOREIGN KEY (Estado_ID) REFERENCES Estado(ID) ON DELETE CASCADE
+);
+
+CREATE TABLE FaturaVenda (
+  ID INT NOT NULL AUTO_INCREMENT,
+  Cliente_ID INT NOT NULL,
+  DataFatura DATE NOT NULL,
+  ValorTotal DECIMAL(18,2) NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (Cliente_ID) REFERENCES Cliente(ID)
+);
+
+CREATE TABLE ContaReceber (
+  ID INT NOT NULL AUTO_INCREMENT,
+  Cliente_ID INT NOT NULL,
+  FaturaVendaID INT NOT NULL,
+  DataConta DATE NOT NULL,
+  DataVencimento DATE NOT NULL,
+  Valor DECIMAL(18,2) NOT NULL,
+  Situação ENUM('Aberto', 'Pago', 'Cancelado') NOT NULL,
+  NúmeroDocumento VARCHAR(20),
+  PRIMARY KEY (ID),
+  FOREIGN KEY (Cliente_ID) REFERENCES Cliente(ID),
+  FOREIGN KEY (FaturaVendaID) REFERENCES FaturaVenda(ID)
+);
